@@ -1,0 +1,13 @@
+{
+  "name": "crawler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "node app.js"
+  },
+  "author": "seka",
+  "license": "ISC"
+}
