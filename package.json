@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
-  "dependencies": {},
+  "dependencies": {
+    "x-ray": "^2.0.2"
+  },
   "devDependencies": {},
   "scripts": {
     "test": "node app.js"
