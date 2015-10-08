@@ -12,6 +12,14 @@ getItems(url)
     console.error('err >> ', err);
   });
 
+/**
+ * getItems
+ * 引数として受け取ったurlにアクセスし、
+ * aタグの情報をオブジェクトにまとめる
+ *
+ * @param url
+ * @return {Promise}
+ */
 function getItems(url) {
   return new Promise((resolve, reject) => {
     xray(url, '.index a', [{
@@ -27,6 +35,14 @@ function getItems(url) {
   });
 }
 
+/**
+ * getDefinitions
+ * itemsに格納されたlink情報を元に5件ずつクローリングを行う
+ * TODO: クローリングを指定する文字列を引数に追加する
+ *
+ * @param items {type: 'string', link: 'string'} を格納した配列
+ * @return {Promise}
+ */
 function getDefinitions(items) {
   const limit = 5;
   let results = [];
@@ -59,6 +75,14 @@ function getDefinitions(items) {
   return request();
 }
 
+/**
+ * getDefinition
+ * itemに格納されたlinkを元にクローリングを行う
+ * TODO: クローリングを指定する文字列を引数に追加する
+ *
+ * @param item {type: 'string', link: 'string'} を格納した配列
+ * @return {Promise} || {} linkが存在しない場合は何も行わない
+ */
 function getDefinition(item) {
   if (!item.link) {
     return;
@@ -79,6 +103,13 @@ function getDefinition(item) {
   });
 }
 
+/**
+ * isEmptyObject
+ * 空のオブジェクトを判定する
+ *
+ * @param obj
+ * @return {Bool}
+ */
 function isEmptyObject(obj) {
   return !Object.keys(obj).length;
 }
