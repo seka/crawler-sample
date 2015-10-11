@@ -106,6 +106,13 @@ function getDefinition(item) {
   });
 }
 
+/**
+ * formatResults
+ * クローリングされたdefinitionsから<, >, ', /といった文字列を取り除く
+ *
+ * @param results
+ * @return {Promise} || {} 引数がArrayではない場合、なにもしない
+ */
 function formatResults(results) {
   if (!util.isArray(results)) {
     return;
