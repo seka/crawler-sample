@@ -1,12 +1,15 @@
 'use strict';
 
+const util = require('util');
 const xray = require('x-ray')();
 const url = 'https://developer.mozilla.org/en-US/docs/Web/CSS/Reference';
 const NOT_FOUND = '';
 
 getItems(url)
   .then(getDefinitions)
+  .then(formatResults)
   .then((results) => {
+    console.log('succeeded!');
     console.log('results: ', results);
   }).catch((err) => {
     console.error('err >> ', err);
@@ -100,6 +103,25 @@ function getDefinition(item) {
       result.definitions = definitions;
       resolve(result);
     });
+  });
+}
+
+function formatResults(results) {
+  if (!util.isArray(results)) {
+    return;
+  }
+  return new Promise((resolve, reject) => {
+    results = results.filter((result) => {
+      if (result.definitions.length < 1) {
+        return null;
+      }
+      let formatted = result.definitions.join(', ');
+      formatted = formatted.trim();
+      formatted = formatted.replace(/<|\/|>|'/g, '');
+      result.definitions = formatted;
+      return result;
+    });
+    resolve(results);
   });
 }
 
