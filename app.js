@@ -12,7 +12,7 @@ getItems(url)
   .then(formatResults)
   .then((results) => {
     console.log('Crawling is succeeded!');
-    fs.writeFile(fd, JSON.stringify(results), 'utf8', (err) => {
+    fs.writeFile(fd, JSON.stringify(results, null, '\t'), 'utf8', (err) => {
       if (err) {
         throw err;
       }
@@ -39,7 +39,9 @@ function getItems(url) {
       if (err) {
         return reject(err);
       }
-      if (isEmptyObject(obj) || !obj) {}
+      else if (isEmptyObject(obj) || !obj) {
+        return reject(new Error('The target is not found.'));
+      }
       resolve(obj);
     });
   });
@@ -54,34 +56,36 @@ function getItems(url) {
  * @return {Promise}
  */
 function getDefinitions(items) {
-  const limit = 5;
+  if (!util.isArray(items)) {
+    throw new Error('items must be Array');
+  }
+  console.log('All Items: ', items.length);
   let results = [];
   let completed = 0;
+  const request = () => {
+    const process = [];
+    const limit = 5 + completed;
+    let offset = completed;
 
-  let request = () => {
-    let process = [];
-    let offset = 0;
-    while (offset < limit) {
-      if (completed + offset > items.length) {
-        break;
-      }
-      let promise = getDefinition(items[completed + offset]);
+    while (offset < limit && offset < items.length) {
+      const promise = getDefinition(items[offset]);
       if (promise) {
         process.push(promise);
       }
       offset++;
     }
-    completed += offset;
+    completed = offset;
+    console.log('The request has been completed: ', completed);
+
     return Promise.all(process).then((res) => {
       results = results.concat(res);
-      // promiseが空振ってしまう？
+      // 125以上でpromiseが空振ってしまう？(Promise.all後にthenが呼ばれない)
       if (completed < 120) {
         return request();
       }
       return Promise.resolve(results);
     });
   };
-
   return request();
 }
 
@@ -95,13 +99,13 @@ function getDefinitions(items) {
  */
 function getDefinition(item) {
   if (!item.link) {
-    return;
+    throw new Error('link property does not exist for item');
   }
   return new Promise((resolve, reject) => {
     let result = {};
     xray(item.link, '#Values + dl', ['code@text'])((err, definitions) => {
       if (err) {
-        console.log(err);
+        return reject(err);
       }
       if (!definitions) {
         definitions = [NOT_FOUND];
@@ -122,7 +126,7 @@ function getDefinition(item) {
  */
 function formatResults(results) {
   if (!util.isArray(results)) {
-    return;
+    throw new Error('results must be Array');
   }
   return new Promise((resolve, reject) => {
     results = results.filter((result) => {
