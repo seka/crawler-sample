@@ -1,16 +1,23 @@
 'use strict';
 
+const fs = require('fs');
 const util = require('util');
 const xray = require('x-ray')();
 const url = 'https://developer.mozilla.org/en-US/docs/Web/CSS/Reference';
 const NOT_FOUND = '';
+const fd = './output.json';
 
 getItems(url)
   .then(getDefinitions)
   .then(formatResults)
   .then((results) => {
-    console.log('succeeded!');
-    console.log('results: ', results);
+    console.log('Crawling is succeeded!');
+    fs.writeFile(fd, JSON.stringify(results), 'utf8', (err) => {
+      if (err) {
+        throw err;
+      }
+      console.log('Building an output file: ' + fd);
+    });
   }).catch((err) => {
     console.error('err >> ', err);
   });
