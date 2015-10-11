@@ -1,7 +1,7 @@
 {
-  "name": "crawler",
-  "version": "1.0.0",
-  "description": "",
+  "name": "crawler-sample",
+  "version": "0.0.1",
+  "description": "MDNのCSS Referenceから特定の値を取りだすx-ray.jsのサンプル",
   "main": "app.js",
   "dependencies": {
     "x-ray": "^2.0.2"
