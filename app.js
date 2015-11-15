@@ -3,20 +3,21 @@
 const fs = require('fs');
 const util = require('util');
 const xray = require('x-ray')();
-const url = 'https://developer.mozilla.org/en-US/docs/Web/CSS/Reference';
+const URL = 'https://developer.mozilla.org/en-US/docs/Web/CSS/Reference';
 const NOT_FOUND = '';
-const fd = './output.json';
+const OUTPUT = './output.json';
+const TIMEOUT = 3000;
 
-getItems(url)
+getItems(URL)
   .then(getDefinitions)
   .then(formatResults)
   .then((results) => {
     console.log('Crawling is succeeded!');
-    fs.writeFile(fd, JSON.stringify(results, null, '\t'), 'utf8', (err) => {
+    fs.writeFile(OUTPUT, JSON.stringify(results, null, '\t'), 'utf8', (err) => {
       if (err) {
         throw err;
       }
-      console.log('Building an output file: ' + fd);
+      console.log('Building an output file: ', OUTPUT);
     });
   }).catch((err) => {
     console.error('err >> ', err);
@@ -140,9 +141,9 @@ function formatResults(results) {
       if (result.definitions.length < 1) {
         return null;
       }
-      let formatted = result.definitions.join(', ');
-      formatted = formatted.trim();
-      formatted = formatted.replace(/<|\/|>|'/g, '');
+      let formatted = result.definitions.join(', ')
+                        .trim()
+                        .replace(/<|\/|>|'/g, '');
       result.definitions = formatted;
       return result;
     });
