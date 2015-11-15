@@ -79,8 +79,7 @@ function getDefinitions(items) {
 
     return Promise.all(process).then((res) => {
       results = results.concat(res);
-      // 125以上でpromiseが空振ってしまう？(Promise.all後にthenが呼ばれない)
-      if (completed < 120) {
+      if (completed < items.length) {
         return request();
       }
       return Promise.resolve(results);
@@ -102,8 +101,16 @@ function getDefinition(item) {
     throw new Error('link property does not exist for item');
   }
   return new Promise((resolve, reject) => {
+    let timerId = setTimeout(function() {
+      console.log("Request timeout:", item.type);
+      result.type = item.type;
+      result.definitions = [NOT_FOUND];
+      resolve(result);
+    }, 3000);
+
     let result = {};
     xray(item.link, '#Values + dl', ['code@text'])((err, definitions) => {
+      clearTimeout(timerId);
       if (err) {
         return reject(err);
       }
