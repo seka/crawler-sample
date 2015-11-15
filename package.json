@@ -11,5 +11,13 @@
     "test": "node app.js"
   },
   "author": "seka",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seka/crawler-sample.git"
+  },
+  "bugs": {
+    "url": "https://github.com/seka/crawler-sample/issues"
+  },
+  "homepage": "https://github.com/seka/crawler-sample#readme"
 }
