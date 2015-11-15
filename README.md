@@ -1,6 +1,6 @@
 # crawler-sample
 
-MDN のCSS reference のページから css が取り得るプロパティを取得する
+MDN のCSS reference のページから css プロパティが取り得る値を取得する
 
 ```bash
 $ npm install
